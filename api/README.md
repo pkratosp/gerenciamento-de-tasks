@@ -12,7 +12,18 @@ Para instalar as dependencias execute o comando:
 npm install
 ```
 
-Iniciar a aplicação em ambiente de desenvolvimento (antes de rodar o comando certifique-se que esta com o docker instalado e iniciado). Ao iniciar o comando sera criado as devidas configurações e iniciados os testes em memória necessários para a execução da aplicação
+Iniciar a aplicação em ambiente de desenvolvimento (antes de rodar o comando certifique-se que esta com o docker instalado e iniciado). Ao iniciar o comando será criado as devidas configurações e iniciados os testes em memória necessários para a execução da aplicação
+
+Segui estes passos para antes de executar a aplicação
+- [x] mata a porta 3333
+- [x] executa os docker
+- [x] cria o bd
+- [x] criar o conteudo de bd
+- [x] criar os dados necessarios para os testes
+- [x] executar testes unitarios
+- [x] executar testes end two end
+- [x] executar a aplicação
+
 ```sh
 npm run dev
 ```
@@ -20,16 +31,42 @@ npm run dev
 
 ## Testes
 
+Para iniciar os Testes Unitários
+```sh
+npm run test
+```
+
+Parta iniciar os Testes end two end
+```sh
+npm run test:e2e
+```
+
+Para iniciar os Testes Unitários e os Testes end two end com uma interface
+```sh
+npm run test:ui
+```
 
 ## Requisitos funcionais
-- [] Usuário deve criar task
-- [] Usuário deve editar task
-- [] Usuário deve remover task
-- [] Usuário deve concluir uma task
-- [] Usuário deve logar na aplicação
+- [X] Usuário deve criar task
+- [X] Usuário deve editar task
+- [X] Usuário deve remover task
+- [X] Usuário deve concluir uma task
+- [X] Usuário deve logar na aplicação
 
 ## Requisitos não funcionais
-- [] A senha de todos os usuários devem estar criptografada
-- [] Os dados da aplicação precisam estar persistidos em um banco PostgreSQL
-- Todos os usuários devem ser identificado por um JWT (JSON Web Token)
+- [X] A senha de todos os usuários devem estar criptografada
+- [X] Os dados da aplicação precisam estar persistidos em um banco PostgreSQL
+- [X] Todos os usuários devem ser identificado por um JWT (JSON Web Token)
 
+
+## Ferramentas utilizadas no projeto
+
+- fastify (utilizado no servidor)
+- fastify JWT (utilizado para validação de json web token)
+- fastify cors (não necessário neste caso)
+- zod (utilizado para validação de campos)
+- bcryptjs (utilizado para criptografar senhas)
+- kill port (para matar porta, caso esteja sendo usada locamente)
+- vitest (utilizado para testes unitários)
+- supertest (utilizado para testes end two end)
+- prisma (utilizado como ORM)

@@ -66,4 +66,13 @@ describe("test http e2e task", async () => {
 
         expect(completedTask.statusCode).toEqual(200)  
     })
+
+    it("user should view all tasks", async () => {
+        const create = await createTask(token)
+        
+        const listAllTasks = await supertest(app.server).get(`/task?page=1`)
+            .set("Authorization", `Bearer ${token}`)
+
+        expect(listAllTasks.statusCode).toEqual(200)  
+    })
 })
