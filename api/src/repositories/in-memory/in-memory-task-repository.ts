@@ -15,7 +15,7 @@ export class InMemoryTaskRepository implements TaskRepository {
             completed_at: null,
             created_at: new Date(),
             updated_at: new Date(),
-            user_id: "",
+            user_id: data.User.connect?.id!,
         })
 
         return this.itemsTasks[0]
