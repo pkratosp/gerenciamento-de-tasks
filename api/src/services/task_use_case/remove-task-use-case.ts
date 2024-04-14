@@ -7,7 +7,10 @@ type RequestType = {
 export class RemoveTaskUseCase {
     constructor(private taskRepository: TaskRepository) {}
 
-    async execute(data: RequestType) {
+    async execute({ id }: RequestType) {
         
+        const removeTask = await this.taskRepository.removeTask(id)
+
+        return removeTask
     }
 }

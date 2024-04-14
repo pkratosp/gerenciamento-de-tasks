@@ -48,7 +48,7 @@ export class InMemoryTaskRepository implements TaskRepository {
     
     async removeTask(idTask: number) {
         const deleteTask = this.itemsTasks.filter((task) => task.id !== idTask)
-
+        
         this.itemsTasks = deleteTask
        
         if (deleteTask.length === 0) {

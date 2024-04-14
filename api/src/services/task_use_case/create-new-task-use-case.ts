@@ -3,6 +3,7 @@ import { TaskRepository } from "src/repositories/task-repository";
 type RequestType = {
     title: string
     description: string
+    userId: string
 }
 
 export class CreateNewTaskUseCase {
@@ -10,5 +11,17 @@ export class CreateNewTaskUseCase {
 
     async execute(data: RequestType) {
         
+        const createTask = await this.taskRepository.createTask({
+            description: data.description,
+            title: data.title,
+            User: {
+                connect: {
+                    id: data.userId
+                }
+            }
+        })
+
+        return createTask
+
     }
 }

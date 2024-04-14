@@ -7,7 +7,9 @@ type RequestType = {
 export class TaskCompletedUseCase {
     constructor (private taskRepository: TaskRepository) {}
 
-    async execute(data: RequestType) {
-        
+    async execute({ id }: RequestType) {
+        const completed = await this.taskRepository.taskCompleted(id)
+
+        return completed
     }
 }
