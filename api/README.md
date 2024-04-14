@@ -16,7 +16,7 @@ Iniciar a aplicação em ambiente de desenvolvimento (antes de rodar o comando c
 
 Segui estes passos para antes de executar a aplicação
 - [x] mata a porta 3333
-- [x] executa os docker
+- [x] executa o docker
 - [x] cria o bd
 - [x] criar o conteudo de bd
 - [x] criar os dados necessarios para os testes
