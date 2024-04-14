@@ -1,9 +1,10 @@
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library"
 import { FastifyReply, FastifyRequest } from "fastify"
 import { makeCreateNewTaskUseCase } from "src/services/factores/task_make/make-create-new-task-use-case"
 import { makeEditTaskUseCase } from "src/services/factores/task_make/make-edit-task-use-case"
 import { makeRemoveTaskUseCase } from "src/services/factores/task_make/make-remove-task-use-case"
 import { makeTaskCompletedUseCase } from "src/services/factores/task_make/make-task-completed-use-case"
-import { z } from "zod"
+import { ZodError, z } from "zod"
 
 export class HandleTask {
 
@@ -11,7 +12,14 @@ export class HandleTask {
         try {
             
             const { body } = req
-            // const userJWT = await req.jwtDecode()
+            const userJWT = await req.jwtDecode()
+
+            const userJWTShecma = z.object({
+                id: z.string().uuid(),
+            })
+
+            const userJWTZod = userJWTShecma.parse(userJWT)
+            
 
             const bodyShecma = z.object({
                 title: z.string(),
@@ -24,13 +32,21 @@ export class HandleTask {
             const create = await _makeCreateNewTaskUseCase.execute({
                 title: bodyZod.title,
                 description: bodyZod.description,
-                userId: ""
+                userId: userJWTZod.id
             })
 
-            return reply.status(201).send("ok")
+            return reply.status(201).send(create.id)
 
         } catch (error) {
             
+            if(error instanceof ZodError) {
+                throw error
+            }
+
+            if(error instanceof PrismaClientKnownRequestError) {
+                throw error
+            }
+
             if(error instanceof Error) {
                 return reply.status(500).send(error.message)
             }
@@ -129,6 +145,13 @@ export class HandleTask {
         try {
 
             const userJWT = await req.jwtDecode()
+
+            const userJWTShecma = z.object({
+                id: z.string().uuid(),
+            })
+
+            const userJWTZod = userJWTShecma.parse(userJWT)
+
             
         } catch (error) {
             if(error instanceof Error) {

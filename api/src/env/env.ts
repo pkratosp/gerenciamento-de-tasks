@@ -1,11 +1,11 @@
 import { z } from "zod"
 
 const envSchema = z.object({
-    NODE_ENV: z.enum(["dev","production"]).default("dev"),
+    NODE_ENV: z.enum(["dev","production","test"]).default("dev"),
     PORT: z.coerce.number().default(3333),
     HOST: z.string().default("0.0.0.0"),
-    DATABASE_URL: z.string().default("mysql://johndoe:randompassword@localhost:3306/mydb"),
-    AUTH_SECRET_TOKEN: z.string()
+    DATABASE_URL: z.string().default("postgresql://username:usernamePassword@localhost:5432/tasks"),
+    AUTH_SECRET_TOKEN: z.string().default("njfosdjidsiufijoiodfjsiosdfiojdfsioi90381923isadhijo12312esad@@")
 })
 
 const _env = envSchema.safeParse(process.env)

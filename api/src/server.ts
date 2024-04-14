@@ -6,6 +6,6 @@ app.listen({
     host: env.HOST
 }).then(() => {
     console.log("Servidor rodando na porta 3333...")
-    console.log("htttp://localhost:3333/")
-    console.log("Documentação da API htttp://localhost:3333/docs")
+    console.log("http://localhost:3333/")
+    console.log("Documentação da API http://localhost:3333/docs")
 })

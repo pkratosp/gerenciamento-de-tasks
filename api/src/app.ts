@@ -1,13 +1,15 @@
 import Fastify from "fastify"
 import cors from "@fastify/cors"
 import fastidyJWT from "@fastify/jwt"
-import { env } from "./env/env" // variaveis de ambiente
-import { ZodError } from "zod"
 
 // rotas
 import { appRouteTask } from "./http/controllers/task/routes"
 import { appRouteAutentication } from "./http/controllers/authentication/routes"
 
+
+import { env } from "./env/env" // variaveis de ambiente
+import { ZodError } from "zod"
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library"
 
 // TODO
 // falantando seed - []
@@ -40,17 +42,23 @@ app.setErrorHandler((error, _, reply) => {
 
     if (error instanceof ZodError) {
         return reply.status(400).send({
-            success: false,
-            hasError: true,
             error: error.format(),
-            data: null
         })
+    } else if(error instanceof PrismaClientKnownRequestError){
+
+        if(error.code === "P2025") {
+            return reply.status(404).send({
+                error: "Usuário não encontrado"
+            })
+        }
+
+        return reply.status(400).send({
+            error: error.message
+        })
+
     } else {
         return reply.status(500).send({
-            success: false,
-            hasError: true,
-            error: "Erro do Servidor Interno",
-            data: null
+            error: "Erro do Servidor Interno"
         })
     }
 
