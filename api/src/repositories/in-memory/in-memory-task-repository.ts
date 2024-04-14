@@ -1,13 +1,13 @@
 
-import { Prisma, Tasks as TasksType } from "@prisma/client";
-import { TaskRepository } from "../task-repository";
+import { Prisma, Tasks as TasksType } from "@prisma/client"
+import { TaskRepository } from "../task-repository"
+import { randomUUID } from "node:crypto"
 
 export class InMemoryTaskRepository implements TaskRepository {
     public itemsTasks: TasksType[] = []
-    public idTask: number = 1
     
     async createTask(data: Prisma.TasksCreateInput) {
-        const id = this.idTask++;
+        const id = randomUUID()
 
         this.itemsTasks.push({
             id: id,
@@ -21,7 +21,7 @@ export class InMemoryTaskRepository implements TaskRepository {
         return this.itemsTasks[0]
     }
     
-    async editTask(data: Prisma.TasksUpdateInput, idTask: number) {
+    async editTask(data: Prisma.TasksUpdateInput, idTask: string) {
         const edit = this.itemsTasks.filter((task) => task.id === idTask)
             .map((task) => {
                 task.title = data.title ? data.title.toString() : task.title
@@ -29,32 +29,32 @@ export class InMemoryTaskRepository implements TaskRepository {
             })
 
         if (edit.length === 0) {
-            return false;
+            return false
         }
-        return true;
+        return true
     }
     
-    async taskCompleted(idTask: number) {
+    async taskCompleted(idTask: string) {
         const edit = this.itemsTasks.filter((task) => task.id === idTask)
             .map((task) => {
                 task.completed_at = new Date()
             })
 
         if (edit.length === 0) {
-            return false;
+            return false
         }
-        return true;
+        return true
     }
     
-    async removeTask(idTask: number) {
+    async removeTask(idTask: string) {
         const deleteTask = this.itemsTasks.filter((task) => task.id !== idTask)
         
         this.itemsTasks = deleteTask
        
         if (deleteTask.length === 0) {
-            return false;
+            return false
         }
-        return true;
+        return true
     }
 
     async listAllTasks(userId: string) {

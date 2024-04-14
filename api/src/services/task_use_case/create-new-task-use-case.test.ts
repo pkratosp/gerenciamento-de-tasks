@@ -7,8 +7,9 @@ let sut: CreateNewTaskUseCase
 
 describe("Create new task", async () => {
 
+    // chama apenas uma vez
     beforeAll(() => {
-        inMemoryTaskRepository = new InMemoryTaskRepository();
+        inMemoryTaskRepository = new InMemoryTaskRepository()
         sut = new CreateNewTaskUseCase(inMemoryTaskRepository)
     })
 
@@ -20,7 +21,7 @@ describe("Create new task", async () => {
             userId: "d729a893-8914-4ac6-aa18-5fe8d6d743d5"
         })
 
-        expect(id).toEqual(expect.any(Number));
+        expect(id).toEqual(expect.any(String))
     })
 
 })

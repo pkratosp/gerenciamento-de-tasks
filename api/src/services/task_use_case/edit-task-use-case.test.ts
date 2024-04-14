@@ -9,8 +9,9 @@ let sut: EditTaskUseCase
 
 describe("edit task", async () => {
 
+    // chama apenas uma vez
     beforeAll(() => {
-        inMemoryTaskRepository = new InMemoryTaskRepository();
+        inMemoryTaskRepository = new InMemoryTaskRepository()
         sutCreateTask = new CreateNewTaskUseCase(inMemoryTaskRepository)
         sut = new EditTaskUseCase(inMemoryTaskRepository)
     })

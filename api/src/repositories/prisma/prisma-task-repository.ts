@@ -1,6 +1,6 @@
-import { TaskRepository } from "../task-repository";
-import { prisma } from "src/lib/prisma";
-import { Prisma } from "@prisma/client";
+import { TaskRepository } from "../task-repository"
+import { prisma } from "src/lib/prisma"
+import { Prisma } from "@prisma/client"
 
 
 export class PrismaTaskRepository implements TaskRepository {
@@ -11,7 +11,7 @@ export class PrismaTaskRepository implements TaskRepository {
 
        return create
     }
-    async editTask(data: Prisma.TasksUpdateInput, idTask: number) {
+    async editTask(data: Prisma.TasksUpdateInput, idTask: string) {
         const editTask = await prisma.tasks.update({
             data: {
                 title: data.title,
@@ -28,7 +28,7 @@ export class PrismaTaskRepository implements TaskRepository {
 
         return false
     }
-    async taskCompleted(idTask: number) {
+    async taskCompleted(idTask: string) {
         const taskCompleted = await prisma.tasks.update({
             data: {
                 created_at: new Date()
@@ -44,7 +44,7 @@ export class PrismaTaskRepository implements TaskRepository {
 
         return false
     }
-    async removeTask(idTask: number) {
+    async removeTask(idTask: string) {
         const removeTask = await prisma.tasks.delete({
             where: {
                 id: idTask
@@ -66,6 +66,6 @@ export class PrismaTaskRepository implements TaskRepository {
             }
         })
 
-        return list;
+        return list
     }
 }

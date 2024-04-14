@@ -6,8 +6,8 @@ import {
 export interface TaskRepository {
 
     createTask(data: Prisma.TasksCreateInput): Promise<TasksType>
-    editTask(data: Prisma.TasksUpdateInput, idTask: number): Promise<boolean>
-    taskCompleted(idTask: number): Promise<boolean>
-    removeTask(idTask: number): Promise<boolean>
+    editTask(data: Prisma.TasksUpdateInput, idTask: string): Promise<boolean>
+    taskCompleted(idTask: string): Promise<boolean>
+    removeTask(idTask: string): Promise<boolean>
     listAllTasks(userId: string): Promise<TasksType[]>
 }

@@ -5,13 +5,13 @@ import { env } from "./env/env" // variaveis de ambiente
 import { ZodError } from "zod"
 
 // rotas
-import { appRouteTask } from "./http/task/routes"
-import { appRouteAutentication } from "./http/authentication/routes"
+import { appRouteTask } from "./http/controllers/task/routes"
+import { appRouteAutentication } from "./http/controllers/authentication/routes"
 
 
 // TODO
 // falantando seed - []
-// faltando rotas - []
+// faltando rotas - [x]
 
 export const app = Fastify({
     logger: env.NODE_ENV === "dev" ? true : false
@@ -36,8 +36,6 @@ app.setErrorHandler((error, _, reply) => {
 
     if (env.NODE_ENV !== "production") {
         console.error(error)
-    } else {
-        //  enviar o log para alguma plataforma   
     }
 
     if (error instanceof ZodError) {

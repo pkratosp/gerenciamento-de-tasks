@@ -1,4 +1,4 @@
-import { TaskRepository } from "src/repositories/task-repository";
+import { TaskRepository } from "src/repositories/task-repository"
 
 type RequestType = {
     title: string

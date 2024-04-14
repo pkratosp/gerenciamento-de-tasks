@@ -9,8 +9,9 @@ let sut: RemoveTaskUseCase
 
 describe("remove task", async () => {
 
+    // chama apenas uma vez
     beforeAll(() => {
-        inMemoryTaskRepository = new InMemoryTaskRepository();
+        inMemoryTaskRepository = new InMemoryTaskRepository()
         sutCreate = new CreateNewTaskUseCase(inMemoryTaskRepository)
         sut = new RemoveTaskUseCase(inMemoryTaskRepository)
     })
@@ -34,7 +35,7 @@ describe("remove task", async () => {
         const remove = await sut.execute({ id: createTask.id })
 
         
-        expect(remove).toEqual(true);
+        expect(remove).toEqual(true)
     })
 
 })

@@ -9,8 +9,9 @@ let sut: TaskCompletedUseCase
 
 describe("completed task", async () => {
 
+    // chama apenas uma vez
     beforeAll(() => {
-        inMemoryTaskRepository = new InMemoryTaskRepository();
+        inMemoryTaskRepository = new InMemoryTaskRepository()
         sutCreated = new CreateNewTaskUseCase(inMemoryTaskRepository)
         sut = new TaskCompletedUseCase(inMemoryTaskRepository)
     })

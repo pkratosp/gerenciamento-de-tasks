@@ -1,7 +1,7 @@
-import { TaskRepository } from "src/repositories/task-repository";
+import { TaskRepository } from "src/repositories/task-repository"
 
 type RequestType = {
-    id: number
+    id: string
 }
 
 export class RemoveTaskUseCase {
