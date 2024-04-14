@@ -2,6 +2,7 @@
 import { Prisma, Tasks as TasksType } from "@prisma/client"
 import { TaskRepository } from "../task-repository"
 import { randomUUID } from "node:crypto"
+import { FilterType } from "src/dto/task-repository-dto"
 
 export class InMemoryTaskRepository implements TaskRepository {
     public itemsTasks: TasksType[] = []
@@ -57,9 +58,13 @@ export class InMemoryTaskRepository implements TaskRepository {
         return true
     }
 
-    async listAllTasks(userId: string) {
+    async listAllTasks(userId: string, filter: FilterType) {
+        // optiado nao realizar tratativa de paginação dentro do in memory
         const listTasks = this.itemsTasks.filter((task) => task.user_id === userId)
 
-        return listTasks
+        return {
+            tasks: listTasks,
+            totalTasks: 0
+        }
     }
 }

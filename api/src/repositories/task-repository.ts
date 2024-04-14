@@ -2,6 +2,7 @@ import {
     Tasks as TasksType, 
     Prisma
 } from "@prisma/client"
+import { FilterType } from "src/dto/task-repository-dto"
 
 export interface TaskRepository {
 
@@ -9,5 +10,5 @@ export interface TaskRepository {
     editTask(data: Prisma.TasksUpdateInput, idTask: string): Promise<boolean>
     taskCompleted(idTask: string): Promise<boolean>
     removeTask(idTask: string): Promise<boolean>
-    listAllTasks(userId: string): Promise<TasksType[]>
+    listAllTasks(userId: string, filter: FilterType): Promise<{ tasks: TasksType[]; totalTasks: number }>
 }

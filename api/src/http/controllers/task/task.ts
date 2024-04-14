@@ -1,5 +1,8 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library"
 import { FastifyReply, FastifyRequest } from "fastify"
+import { EmptyError } from "src/services/errors/task/empty-data-error"
+import { RequiredParams } from "src/services/errors/task/required-params-error"
+import { makeAllTaskByUserUseCase } from "src/services/factores/task_make/make-all-task-by-user-use-case"
 import { makeCreateNewTaskUseCase } from "src/services/factores/task_make/make-create-new-task-use-case"
 import { makeEditTaskUseCase } from "src/services/factores/task_make/make-edit-task-use-case"
 import { makeRemoveTaskUseCase } from "src/services/factores/task_make/make-remove-task-use-case"
@@ -143,6 +146,15 @@ export class HandleTask {
 
     public async getTasks(req: FastifyRequest, reply: FastifyReply) {
         try {
+            const { query } = req
+
+            const queryShecma = z.object({
+                page: z.coerce.number().optional(),
+                title: z.string().optional(),
+                description: z.string().optional()
+            })
+            const queryZod = queryShecma.parse(query)
+
 
             const userJWT = await req.jwtDecode()
 
@@ -152,10 +164,26 @@ export class HandleTask {
 
             const userJWTZod = userJWTShecma.parse(userJWT)
 
+
+            const _makeAllTaskByUserUseCase = await makeAllTaskByUserUseCase()
             
+            const list = await _makeAllTaskByUserUseCase.execute({ 
+                userId: userJWTZod.id, 
+                filter: { 
+                    ...queryZod
+                }
+            })
+            
+            return reply.status(200).send(list)
+
         } catch (error) {
-            if(error instanceof Error) {
-                return reply.status(500).send(error.message)
+
+            if(error instanceof RequiredParams) {
+                return reply.status(400).send(error.message)
+            }
+
+            if(error instanceof EmptyError) {
+                return reply.status(200).send(error.message)
             }
 
             throw error

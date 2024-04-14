@@ -25,9 +25,9 @@ describe("list all task", async () => {
             userId: userId
         })
 
-        const list = await sut.execute({ userId: userId })
+        const list = await sut.execute({ userId: userId, filter: { page: 1 } })
 
-        expectTypeOf(list).toBeArray()
+        expectTypeOf(list.tasks).toBeArray()
         
     })
 
@@ -41,7 +41,7 @@ describe("list all task", async () => {
         })
 
         expect(async () => 
-            await sut.execute({ userId: userId }) 
+            await sut.execute({ userId: userId, filter: { page: 1 } }) 
         ).rejects.toBeInstanceOf(EmptyError)
 
     })

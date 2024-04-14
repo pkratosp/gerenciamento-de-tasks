@@ -1,6 +1,7 @@
 import { TaskRepository } from "../task-repository"
 import { prisma } from "src/lib/prisma"
 import { Prisma } from "@prisma/client"
+import { FilterType } from "src/dto/task-repository-dto"
 
 
 export class PrismaTaskRepository implements TaskRepository {
@@ -59,13 +60,42 @@ export class PrismaTaskRepository implements TaskRepository {
     }
     
 
-    async listAllTasks(userId: string) {
-        const list = await prisma.tasks.findMany({
-            where: {
-                user_id: userId
-            }
-        })
+    async listAllTasks(userId: string, filter: FilterType) {
+        const filterPage = filter.page != undefined ? ((filter?.page * 10) - 10) : undefined
+        
+        const [list, totalTasks] = await Promise.all([
+            prisma.tasks.findMany({
+                skip: filterPage ?? undefined,
+                take: filterPage == undefined ? undefined : 10,
+                where: {
+                    user_id: userId,
+                    title: {
+                        contains: filter.title
+                    },
+                    description: {
+                        contains: filter.description
+                    }
+                },
+                orderBy: {
+                    id: "desc"
+                }
+            }),
+            prisma.tasks.count({
+                where: {
+                    user_id: userId,
+                    title: {
+                        contains: filter.title
+                    },
+                    description: {
+                        contains: filter.description
+                    }
+                }
+            })
+        ])
 
-        return list
+        return {
+            tasks: list,
+            totalTasks: totalTasks
+        }
     }
 }
