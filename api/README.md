@@ -22,9 +22,14 @@ npm run dev
 
 
 ## Requisitos funcionais
-
+- [] Usuário deve criar task
+- [] Usuário deve editar task
+- [] Usuário deve remover task
+- [] Usuário deve concluir uma task
+- [] Usuário deve logar na aplicação
 
 ## Requisitos não funcionais
+- [] A senha de todos os usuários devem estar criptografada
+- [] Os dados da aplicação precisam estar persistidos em um banco PostgreSQL
+- Todos os usuários devem ser identificado por um JWT (JSON Web Token)
 
-
-## Regras de negócio

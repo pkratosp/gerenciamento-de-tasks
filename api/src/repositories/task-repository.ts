@@ -1,15 +1,13 @@
 import { 
-    EditTaskRequest,
-    TaskCreateRequest,
-    TaskCompletedRequest,
-    TaskRemoveRequest
-} from "src/dto/task-dto"
+    Tasks as TasksType, 
+    Prisma
+} from "@prisma/client"
 
 export interface TaskRepository {
 
-    createTask(data: TaskCreateRequest): Promise<any>
-    editTask(data: EditTaskRequest): Promise<any>
-    taskCompleted(data: TaskRemoveRequest): Promise<any>
-    removeTask(data: TaskCompletedRequest): Promise<any>
-    
+    createTask(data: Prisma.TasksCreateInput): Promise<TasksType>
+    editTask(data: Prisma.TasksUpdateInput, idTask: number): Promise<boolean>
+    taskCompleted(idTask: number): Promise<boolean>
+    removeTask(idTask: number): Promise<boolean>
+    listAllTasks(userId: string): Promise<TasksType[]>
 }
