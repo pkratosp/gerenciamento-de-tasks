@@ -1,7 +1,16 @@
 # Front
 Este projeto foi criado usando nextjs na sua versão 14.0.4, não usei a ultima versão do nextjs pois estava enfrentando um problema com a integração do nextauth, então opitei por usar uma versão que ja tinha trabalhado anteriormente para garantir a minha entrega no prazo.
 
-Obs: Não foi integrado da API a rota de filtrar as tasks
+Obs: Não foi integrado da API a rota de filtrar as tasks e cadastro do usuário, porem ao executar a aplicação localmente um usuário é previamente cadastrado
+
+Usuário padrão
+```sh
+
+Usuário: 960680153277@gmail.com
+senha: 123456
+
+```
+
 
 ## Getting Started
 
