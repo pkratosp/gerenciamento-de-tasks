@@ -7,6 +7,13 @@ Obs: Foi criado somente o ambiente de desenvolvimento
 Para iniciar a aplicação é necessário ter o Docker instalado em sua máquina (utilizando a versão 24.0.7 ou a mais recente)
 Para o funcionamento correto da aplicação é necessário definir um arquivo .env com todas as variaveis de ambiente definidas no arquivo de exemplo .env.aplicacao
 
+Para realizar login na aplicação após executar a aplicação em ambiente de desenvolvimento temos o seguinte usuário
+```sh
+
+Usuário: 960680153277@gmail.com
+senha: 123456
+
+```
 
 Para instalar as dependencias execute o comando:
 ```sh
