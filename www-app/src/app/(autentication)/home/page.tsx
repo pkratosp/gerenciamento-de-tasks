@@ -1,12 +1,15 @@
 "use client"
 
-import { TableComponent } from "@/components/Table"
-import { CreateTask } from "@/components/Taks/CreateTask/CreateTask"
+import { useEffect, useState } from "react"
 import { api } from "@/lib/axios"
 import { AxiosError } from "axios"
 import { useSession } from "next-auth/react"
-import { useEffect, useState } from "react"
+
+// componentes
+import { CreateTask } from "@/components/Taks/CreateTask/CreateTask"
+import { TableComponent } from "@/components/Taks/Table"
 import { toast } from "sonner"
+import { ButtonLogout } from "@/components/Buttons/ButtonLogout"
 
 const tasks = [
     {
@@ -35,6 +38,8 @@ const tasks = [
 export default function Home() {
     const { data: session } = useSession()
 
+    const [page, setPage] = useState<number>(1)
+
     const [isOpenCreateTask, setIsOpenCreateTask] = useState<boolean>(false)
     const [isLoadingTable, setIsLoadingTable] = useState<boolean>(false)
 
@@ -43,6 +48,7 @@ export default function Home() {
             id: string;
             title: string;
             description: string;
+            completed_at: Date | null
         }>
         totalTasks: number
     }>({
@@ -50,58 +56,74 @@ export default function Home() {
         totalTasks: 0
     })
 
-    async function getTasks() {
-        try {
 
-            setIsLoadingTable(true)
-
-            const tasks = await api.get("/task?page=1", {
-                headers: {
-                    Authorization: `Bearer ${session?.token}`
-                }
-            })
-
-            setIsLoadingTable(false)
-
-            if (tasks.status === 200) {
-                setTasks(tasks.data)
-            } else {
-                return toast.info("Ocorreu um erro inesperado")
-            }
-
-
-        } catch (error) {
-            setIsLoadingTable(false)
-
-
-            if (error instanceof AxiosError) {
-                return toast.error(error.message)
-            }
-
-            return toast.error("Ocorreu um erro inesperado")
-        }
-    }
 
     // para apenas executar uma vez, pois ao cadastrar sera ataualizado diretamente via componente
     useEffect(() => {
+
+        async function getTasks() {
+            try {
+
+                setIsLoadingTable(true)
+
+                const tasks = await api.get(`/task?page=${page}`, {
+                    headers: {
+                        Authorization: `Bearer ${session?.token}`
+                    }
+                })
+
+                setIsLoadingTable(false)
+
+                if (tasks.status === 200) {
+                    if (typeof tasks.data === "string") {
+
+                        setTasks({
+                            tasks: [],
+                            totalTasks: 0
+                        })
+
+                        return toast.info(tasks.data)
+                    }
+
+                    setTasks(tasks.data)
+                } else {
+                    return toast.info("Ocorreu um erro inesperado")
+                }
+
+
+            } catch (error) {
+                setIsLoadingTable(false)
+
+
+                if (error instanceof AxiosError) {
+                    return toast.error(error.message)
+                }
+
+                return toast.error("Ocorreu um erro inesperado")
+            }
+        }
+
         if (session)
             getTasks()
-    }, [session])
+
+    }, [session, page])
 
     return (
         session?.token === undefined ? (
-            <>
-            </>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                <p className="text-sm text-gray-800 font-bold">Carregando sessão...</p>
+            </div>
         ) : (
             <>
+
                 <CreateTask
                     closeModal={() => setIsOpenCreateTask(false)}
                     isOpen={isOpenCreateTask}
-                    tasks={tasks}
                     setTasks={setTasks}
+                    tasks={tasks}
                 />
 
-                <div className="flex justify-end m-4">
+                <div className="flex justify-end items-center gap-2 m-4">
                     <button
                         onClick={() => setIsOpenCreateTask(true)}
                         type="button"
@@ -109,6 +131,7 @@ export default function Home() {
                     >
                         Criar nova task
                     </button>
+                    <ButtonLogout />
                 </div>
 
                 <div className="mx-4">
@@ -121,6 +144,8 @@ export default function Home() {
                             <TableComponent
                                 tasks={tasks.tasks}
                                 totalTasks={tasks.totalTasks}
+                                page={page}
+                                setPage={setPage}
                             />
                         )
                     }

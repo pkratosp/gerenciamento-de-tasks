@@ -1,19 +1,26 @@
-import { Dialog, Transition } from '@headlessui/react'
+"use client"
+
 import { Fragment, useState } from 'react'
-import { Form } from '../Form'
 import { useForm } from 'react-hook-form'
-import { TaskType } from '../data'
-import { AxiosError } from 'axios'
-import { toast } from 'sonner'
 import { api } from '@/lib/axios'
+import { AxiosError } from 'axios'
 import clsx from 'clsx'
 import { useSession } from 'next-auth/react'
+
+// compoentes
+import { Form } from '../Form'
+import { Dialog, Transition } from '@headlessui/react'
+import { toast } from 'sonner'
+
+// tipagens
+import { TaskType } from '../data'
 
 type TasksType = {
     tasks: Array<{
         id: string;
         title: string;
         description: string;
+        completed_at: Date | null
     }>
     totalTasks: number
 }
@@ -25,8 +32,10 @@ interface Props {
     setTasks: (state: TasksType) => void
 }
 
-export function CreateTask({ closeModal, isOpen, tasks, setTasks }: Props) {
+export function CreateTask({ closeModal, isOpen, setTasks, tasks }: Props) {
     const { data: session } = useSession()
+
+    // formulario
     const { handleSubmit, register } = useForm<TaskType>()
     const [isLoadingButton, setIsLoadingButton] = useState<boolean>(false)
 
@@ -48,16 +57,20 @@ export function CreateTask({ closeModal, isOpen, tasks, setTasks }: Props) {
             setIsLoadingButton(false)
 
             if (createTask.status === 201) {
+
+                // incremento a cada task criada
+                // ah um bug visual, ele incrementa, mas caso passe de 10, sera listado ainda na tabela, devido a tempo não consegui resolver essa questão 
                 setTasks({
                     tasks: [
                         ...tasks.tasks,
                         {
                             description,
                             title,
-                            id: createTask.data
+                            id: createTask.data,
+                            completed_at: null
                         }
                     ],
-                    totalTasks: 1
+                    totalTasks: tasks.tasks.length++
                 })
                 return toast.success("Task criada com sucesso")
             } else {
@@ -112,6 +125,7 @@ export function CreateTask({ closeModal, isOpen, tasks, setTasks }: Props) {
                                     <form onSubmit={handleSubmit(handleCreateTask)}>
                                         <div className="mt-2">
 
+                                            {/* aproveitando formulario tanto para cadastro quando para edição */}
                                             <Form
                                                 register={register}
                                             />

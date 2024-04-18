@@ -1,59 +1,44 @@
-import { Fragment, useEffect, useState } from 'react'
-import { useSession } from 'next-auth/react'
+"use client"
+
+import { Fragment, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { api } from '@/lib/axios'
 import { AxiosError } from 'axios'
-import { useForm } from 'react-hook-form'
 import clsx from 'clsx'
-
+import { useSession } from 'next-auth/react'
 
 // componentes
-import { toast } from 'sonner'
 import { Dialog, Transition } from '@headlessui/react'
-import { Form } from '../Form'
+import { toast } from 'sonner'
 
-// tipagens
-import { TaskType } from '../data'
 interface Props {
     isOpen: boolean
     closeModal(): void
     task: {
         id: string
-        title: string
-        description: string
-    } | null
+    }
 }
 
-
-export function EditTask({ closeModal, isOpen, task }: Props) {
+export function DeleteTask({ closeModal, isOpen, task }: Props) {
     const { data: session } = useSession()
 
-    const { handleSubmit, register, setValue } = useForm<TaskType>()
+    const { handleSubmit } = useForm()
     const [isLoadingButton, setIsLoadingButton] = useState<boolean>(false)
 
-    useEffect(() => {
-        setValue("title", task?.title ?? "")
-        setValue("description", task?.description ?? "")
-    }, [task, setValue])
-
-    async function handleEditTask({ description, title }: TaskType) {
+    async function handleDeleteTask() {
         try {
 
             setIsLoadingButton(true)
 
-            const editTask = await api.put(`/task/${task?.id}`,
-                {
-                    title,
-                    description
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${session?.token}`
-                    }
-                })
+            const completedTask = await api.delete(`/task/${task?.id}`, {
+                headers: {
+                    Authorization: `Bearer ${session?.token}`
+                }
+            })
             setIsLoadingButton(false)
 
-            if (editTask.status === 200) {
-                toast.success("Task editada com sucesso")
+            if (completedTask.status === 200 && completedTask.data == true) {
+                toast.success("Task deletada com sucesso!")
 
                 // coloquei um time para da um reload na pagina
                 setTimeout(() => {
@@ -61,7 +46,7 @@ export function EditTask({ closeModal, isOpen, task }: Props) {
                 }, 1250)
 
             } else {
-                return toast.info("Ocorreu algo inesperado ao editar task")
+                return toast.info("Ocorreu algo inesperado ao deletar task")
             }
 
         } catch (error) {
@@ -107,17 +92,9 @@ export function EditTask({ closeModal, isOpen, task }: Props) {
                                         as="h3"
                                         className="text-lg font-medium leading-6 text-gray-900"
                                     >
-                                        Editar nova task
+                                        Deletar task task
                                     </Dialog.Title>
-                                    <form onSubmit={handleSubmit(handleEditTask)}>
-                                        <div className="mt-2">
-
-                                            {/* aproveitando formulario tanto para cadastro quando para edição */}
-                                            <Form
-                                                register={register}
-                                            />
-
-                                        </div>
+                                    <form onSubmit={handleSubmit(handleDeleteTask)}>
 
                                         <div className="mt-4 flex justify-end">
                                             <button
@@ -135,7 +112,7 @@ export function EditTask({ closeModal, isOpen, task }: Props) {
                                                 })}
                                             >
                                                 {
-                                                    isLoadingButton === true ? "Editando..." : "Editar Task"
+                                                    isLoadingButton === true ? "Deletando..." : "Deletar Task"
                                                 }
 
                                             </button>
