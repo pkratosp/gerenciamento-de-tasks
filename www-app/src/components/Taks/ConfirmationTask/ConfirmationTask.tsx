@@ -19,6 +19,7 @@ interface Props {
     }
 }
 
+// para garantir o prazo da entrega, utilizei o mesmo componente de criação e edição do modal
 export function ConfirmationTask({ isOpen, closeModal, task }: Props) {
     const { data: session } = useSession()
 
