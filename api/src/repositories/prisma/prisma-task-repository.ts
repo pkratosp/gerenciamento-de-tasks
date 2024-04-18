@@ -32,7 +32,7 @@ export class PrismaTaskRepository implements TaskRepository {
     async taskCompleted(idTask: string) {
         const taskCompleted = await prisma.tasks.update({
             data: {
-                created_at: new Date()
+                completed_at: new Date()
             },
             where: {
                 id: idTask
