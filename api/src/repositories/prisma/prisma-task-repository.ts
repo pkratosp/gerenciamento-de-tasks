@@ -61,12 +61,12 @@ export class PrismaTaskRepository implements TaskRepository {
     
 
     async listAllTasks(userId: string, filter: FilterType) {
-        const filterPage = filter.page != undefined ? ((filter?.page * 10) - 10) : undefined
+        const filterPage = filter.page != undefined ? ((filter?.page * 20) - 20) : undefined
         
         const [list, totalTasks] = await Promise.all([
             prisma.tasks.findMany({
                 skip: filterPage ?? undefined,
-                take: filterPage == undefined ? undefined : 10,
+                take: filterPage == undefined ? undefined : 20,
                 where: {
                     user_id: userId,
                     title: {
@@ -77,7 +77,7 @@ export class PrismaTaskRepository implements TaskRepository {
                     }
                 },
                 orderBy: {
-                    id: "desc"
+                    created_at: "asc"
                 }
             }),
             prisma.tasks.count({

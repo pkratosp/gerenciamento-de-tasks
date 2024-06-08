@@ -155,7 +155,6 @@ export class HandleTask {
             })
             const queryZod = queryShecma.parse(query)
 
-
             const userJWT = await req.jwtDecode()
 
             const userJWTShecma = z.object({
@@ -174,6 +173,7 @@ export class HandleTask {
                 }
             })
             
+
             return reply.status(200).send(list)
 
         } catch (error) {
